@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riyan ❤️ Tiyas - Our Wealth Journey</title>
+    <title>Rytic - Our Wealth Journey</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -31,7 +31,30 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; min-height: 100dvh; }
+        @supports (height: 100dvh) {
+            body { height: 100dvh; }
+        }
+        .mobile-bottom-nav {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            min-height: 64px;
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+            padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+            z-index: 60;
+            box-sizing: border-box;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .mobile-page-content {
+            padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
+        }
+        @media (min-width: 768px) {
+            .mobile-page-content { padding-bottom: 2rem !important; }
+        }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -49,7 +72,7 @@
         .fab { box-shadow: 0 4px 14px 0 rgba(244, 63, 94, 0.39); }
     </style>
 </head>
-<body class="text-slate-800 h-screen overflow-hidden flex bg-slate-50">
+<body class="text-slate-800 min-h-[100dvh] overflow-hidden flex bg-slate-50">
 
     <!-- Desktop Sidebar -->
     <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col h-full z-10 shadow-sm">
@@ -87,6 +110,10 @@
                 <i class="fa-solid fa-calculator w-5 text-center text-slate-400"></i>
                 <span>Compounding</span>
             </a>
+            <a href="#" onclick="navigate('settings')" id="nav-settings" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors">
+                <i class="fa-solid fa-gear w-5 text-center text-slate-400"></i>
+                <span>Settings</span>
+            </a>
         </nav>
         <div class="p-4 border-t border-slate-100">
             <button onclick="openAddMenu()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors flex items-center justify-center space-x-2">
@@ -97,7 +124,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full relative overflow-hidden">
+    <main class="flex-1 flex flex-col h-[100dvh] relative overflow-hidden">
         <!-- Mobile Header -->
         <header class="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center z-10 shadow-sm">
             <div class="flex items-center space-x-2">
@@ -106,13 +133,18 @@
                 </div>
                 <h1 class="font-bold text-slate-800">R & T Wealth</h1>
             </div>
-            <button onclick="openAddMenu()" class="text-brand-500 w-8 h-8 bg-brand-50 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-plus"></i>
-            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="navigate('settings')" aria-label="Settings" class="text-slate-500 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-gear text-sm"></i>
+                </button>
+                <button onclick="openAddMenu()" aria-label="Add record" class="text-brand-500 w-8 h-8 bg-brand-50 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
         </header>
 
         <!-- Pages Container -->
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 relative" id="pages-container">
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 relative mobile-page-content" id="pages-container">
             
             <!-- DASHBOARD -->
             <div id="page-dashboard" class="page-section max-w-5xl mx-auto space-y-6">
@@ -125,7 +157,7 @@
                     <h2 class="text-4xl md:text-5xl font-bold tracking-tight" id="dash-total-wealth">¥ 0</h2>
                     <div class="mt-4 inline-flex items-center space-x-1 bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
                         <i class="fa-solid fa-circle-info text-xs"></i>
-                        <span>Base Currency: JPY</span>
+                        <span>Base Currency: <span id="dash-base-currency">JPY</span></span>
                     </div>
                 </div>
 
@@ -386,7 +418,7 @@
                         <h3 class="font-semibold text-slate-800 mb-4">Simulation Inputs</h3>
                         <form id="simulator-form" class="space-y-4">
                             <div>
-                                <label class="block text-xs font-medium text-slate-500 mb-1">Initial Capital from Assets (JPY)</label>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Initial Capital from Assets (<span id="sim-principal-currency">JPY</span>)</label>
                                 <select id="sim-asset-source" onchange="syncCompoundingFromAssets()" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none mb-2">
                                     <option value="all">All Assets</option>
                                 </select>
@@ -394,7 +426,7 @@
                                 <p id="sim-asset-helper" class="text-[11px] text-slate-400 mt-1">Automatically synced from Assets.</p>
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-slate-500 mb-1">Monthly Contribution (JPY)</label>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Monthly Contribution (<span id="sim-monthly-currency">JPY</span>)</label>
                                 <input type="number" id="sim-monthly" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none" value="50000">
                             </div>
                             <div>
@@ -426,6 +458,44 @@
                             <canvas id="compoundingChart"></canvas>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div id="page-settings" class="page-section max-w-3xl mx-auto space-y-6 hidden">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Settings</h2>
+                    <p class="text-sm text-slate-500">Configure the currency used for dashboard totals, cross-currency calculations, and All Assets compounding.</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-brand-50 text-brand-500 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-slate-800">Base Currency</h3>
+                            <p class="text-sm text-slate-500 mt-1">Your asset's original currency stays unchanged. Base Currency is only used when values from different currencies are combined.</p>
+                            <div class="mt-4">
+                                <select id="base-currency-select" onchange="changeBaseCurrency(this.value)" class="w-full border border-slate-300 rounded-lg p-3 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none">
+                                    <option value="JPY">JPY — Japanese Yen (¥)</option>
+                                    <option value="IDR">IDR — Indonesian Rupiah (Rp)</option>
+                                    <option value="USD">USD — US Dollar ($)</option>
+                                </select>
+                            </div>
+                            <p id="base-currency-status" class="text-xs text-slate-400 mt-2">Current base currency: JPY</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl border border-slate-200 p-5 text-sm text-slate-600">
+                    <div class="font-semibold text-slate-800 mb-2">What changes?</div>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Dashboard totals are displayed in the selected Base Currency.</li>
+                        <li>All Assets in Compounding is converted into the selected Base Currency.</li>
+                        <li>Individual assets keep their own IDR, JPY, or USD currency.</li>
+                        <li>Your selection is saved on this device and restored after reload.</li>
+                    </ul>
                 </div>
             </div>
 
@@ -501,7 +571,7 @@
         </div> <!-- End Pages Container -->
 
         <!-- Mobile Bottom Nav -->
-        <nav class="md:hidden bg-white border-t border-slate-200 flex justify-around p-2 pb-safe z-10">
+        <nav class="mobile-bottom-nav md:hidden border-t border-slate-200 flex justify-around">
             <button onclick="navigate('dashboard')" class="mobile-nav-item flex flex-col items-center p-2 text-brand-500" data-target="dashboard">
                 <i class="fa-solid fa-chart-pie mb-1"></i><span class="text-[10px] font-medium">Home</span>
             </button>
@@ -528,13 +598,25 @@
         import { getFirestore, doc, collection, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Global state
+        const SUPPORTED_CURRENCIES = {
+            JPY: 'Japanese Yen (¥)',
+            IDR: 'Indonesian Rupiah (Rp)',
+            USD: 'US Dollar ($)'
+        };
+
+        let savedBaseCurrency = 'JPY';
+        try {
+            const stored = localStorage.getItem('wealth_base_currency');
+            if (stored && SUPPORTED_CURRENCIES[stored]) savedBaseCurrency = stored;
+        } catch (e) {}
+
         window.appState = {
             assets: [],
             investments: [],
             contributions: [],
             goals: [],
             userId: null,
-            baseCurrency: 'JPY',
+            baseCurrency: savedBaseCurrency,
             db: null,
             collectionPrefix: '' // Will be /artifacts/{appId}/users/{userId}/
         };
@@ -627,8 +709,12 @@
 
         // Helper: Convert to Base Currency (Hardcoded FX for MVP simplicity, as per PRD "Custom Currency Works" we allow manual values, but need defaults)
         function toBase(amount, currency) {
-            const rates = { JPY: 1, USD: 145, IDR: 0.0095 }; // Mock rates relative to JPY
-            return (amount * (rates[currency] || 1));
+            const ratesToJPY = { JPY: 1, USD: 145, IDR: 0.0095 };
+            const source = currency || window.appState.baseCurrency || 'JPY';
+            const base = window.appState.baseCurrency || 'JPY';
+            const sourceRate = ratesToJPY[source] || 1;
+            const baseRate = ratesToJPY[base] || 1;
+            return (Number(amount) || 0) * sourceRate / baseRate;
         }
 
         function formatCurrency(amount, currency = 'JPY') {
@@ -655,10 +741,10 @@
             const totalWealth = riyanTotal + tiyasTotal + sharedTotal;
 
             // Update Dashboard Text
-            document.getElementById('dash-total-wealth').textContent = formatCurrency(totalWealth, 'JPY');
-            document.getElementById('dash-riyan-total').textContent = formatCurrency(riyanTotal, 'JPY');
-            document.getElementById('dash-tiyas-total').textContent = formatCurrency(tiyasTotal, 'JPY');
-            document.getElementById('dash-shared-total').textContent = formatCurrency(sharedTotal, 'JPY');
+            document.getElementById('dash-total-wealth').textContent = formatCurrency(totalWealth, window.appState.baseCurrency);
+            document.getElementById('dash-riyan-total').textContent = formatCurrency(riyanTotal, window.appState.baseCurrency);
+            document.getElementById('dash-tiyas-total').textContent = formatCurrency(tiyasTotal, window.appState.baseCurrency);
+            document.getElementById('dash-shared-total').textContent = formatCurrency(sharedTotal, window.appState.baseCurrency);
 
             document.getElementById('dash-riyan-pct').textContent = totalWealth ? `${((riyanTotal/totalWealth)*100).toFixed(1)}% of total` : '0% of total';
             document.getElementById('dash-tiyas-pct').textContent = totalWealth ? `${((tiyasTotal/totalWealth)*100).toFixed(1)}% of total` : '0% of total';
@@ -707,7 +793,7 @@
                             </span>
                         </td>
                         <td class="p-4 text-right">
-                            <div class="font-bold text-slate-800">${formatCurrency(baseVal, 'JPY')}</div>
+                            <div class="font-bold text-slate-800">${formatCurrency(baseVal, window.appState.baseCurrency)}</div>
                             ${asset.currency !== 'JPY' ? `<div class="text-xs text-slate-400">${formatCurrency(asset.currentValue, asset.currency)}</div>` : ''}
                         </td>
                         <td class="p-4 text-center">
@@ -1221,33 +1307,57 @@
             }
         }
 
-        function getAssetValueForCompounding(assetId = 'all') {
+        function getCompoundingContext() {
+            const select = document.getElementById('sim-asset-source');
+            const selectedId = select?.value || 'all';
             const assets = window.appState.assets || [];
-            if (assetId === 'all') {
-                return assets.reduce((sum, asset) => sum + toBase(Number(asset.currentValue) || 0, asset.currency), 0);
+
+            if (selectedId !== 'all') {
+                const asset = assets.find(a => a.id === selectedId);
+                if (asset) {
+                    return {
+                        assetId: asset.id,
+                        asset,
+                        currency: asset.currency || window.appState.baseCurrency || 'JPY',
+                        principal: Number(asset.currentValue) || 0,
+                        currencyLabel: asset.currency || window.appState.baseCurrency || 'JPY'
+                    };
+                }
             }
-            const asset = assets.find(a => a.id === assetId);
-            return asset ? toBase(Number(asset.currentValue) || 0, asset.currency) : 0;
+
+            // When multiple currencies are combined, use the app base currency.
+            const currency = window.appState.baseCurrency || 'JPY';
+            const principal = assets.reduce((sum, asset) =>
+                sum + toBase(Number(asset.currentValue) || 0, asset.currency), 0);
+            return {
+                assetId: 'all',
+                asset: null,
+                currency,
+                principal,
+                currencyLabel: `${currency} (Base Currency)`
+            };
         }
 
         window.syncCompoundingFromAssets = function() {
             const select = document.getElementById('sim-asset-source');
             const principalInput = document.getElementById('sim-principal');
             const helper = document.getElementById('sim-asset-helper');
+            const currencyLabel = document.getElementById('sim-principal-currency');
             if (!select || !principalInput) return;
 
-            const assetId = select.value || 'all';
-            const principal = getAssetValueForCompounding(assetId);
-            principalInput.value = Math.round(principal);
+            const context = getCompoundingContext();
+            principalInput.value = Math.round(context.principal);
+            principalInput.dataset.currency = context.currency;
+
+            if (currencyLabel) currencyLabel.textContent = context.currency;
+            const monthlyCurrencyLabel = document.getElementById('sim-monthly-currency');
+            if (monthlyCurrencyLabel) monthlyCurrencyLabel.textContent = context.currency;
 
             if (helper) {
-                if (assetId === 'all') {
-                    helper.textContent = `${window.appState.assets.length} asset(s) connected · Total current asset value`;
+                if (context.asset) {
+                    helper.textContent = `${context.asset.name} · Current value linked directly from Assets (${context.currency})`;
                 } else {
-                    const asset = window.appState.assets.find(a => a.id === assetId);
-                    helper.textContent = asset
-                        ? `${asset.name} · ${formatCurrency(principal, 'JPY')} in base currency`
-                        : 'Selected asset is no longer available.';
+                    helper.textContent = `${window.appState.assets.length} asset(s) connected · Combined in ${context.currency}`;
                 }
             }
 
@@ -1264,10 +1374,11 @@
             const current = select.value || 'all';
             const assets = window.appState.assets || [];
 
-            select.innerHTML = '<option value="all">All Assets</option>' +
+            select.innerHTML = '<option value="all">All Assets (Base Currency)</option>' +
                 assets.map(asset => {
-                    const value = toBase(Number(asset.currentValue) || 0, asset.currency);
-                    return `<option value="${asset.id}">${asset.name} · ${formatCurrency(value, 'JPY')}</option>`;
+                    const value = Number(asset.currentValue) || 0;
+                    const currency = asset.currency || window.appState.baseCurrency || 'JPY';
+                    return `<option value="${asset.id}">${asset.name} · ${formatCurrency(value, currency)}</option>`;
                 }).join('');
 
             select.value = assets.some(a => a.id === current) || current === 'all' ? current : 'all';
@@ -1275,7 +1386,15 @@
         }
 
         window.runSimulation = () => {
-            const principal = parseFloat(document.getElementById('sim-principal').value) || 0;
+            const context = getCompoundingContext();
+            const principal = context.principal;
+            const currency = context.currency;
+            const principalInput = document.getElementById('sim-principal');
+            if (principalInput) {
+                principalInput.value = Math.round(principal);
+                principalInput.dataset.currency = currency;
+            }
+
             const monthly = parseFloat(document.getElementById('sim-monthly').value) || 0;
             const rate = (parseFloat(document.getElementById('sim-rate').value) || 0) / 100;
             const years = parseInt(document.getElementById('sim-years').value) || 0;
@@ -1286,63 +1405,75 @@
             let labels = [];
             let principalData = [];
             let interestData = [];
-            
             let currentPrincipal = principal;
             let currentBalance = principal;
 
-            // Compute month by month for accuracy and chart smoothing
             for (let i = 0; i <= months; i++) {
-                if (i % 12 === 0 || i === months) { // Save yearly data points
+                if (i % 12 === 0 || i === months) {
                     labels.push(`Year ${i/12}`);
                     principalData.push(currentPrincipal);
                     interestData.push(currentBalance - currentPrincipal);
                 }
-                
-                // End of month accumulation
-                if(i < months) {
+                if (i < months) {
                     currentBalance = (currentBalance + monthly) * (1 + monthlyRate);
                     currentPrincipal += monthly;
                 }
             }
 
-            // Update UI totals
-            document.getElementById('sim-out-invested').textContent = formatCurrency(currentPrincipal, 'JPY');
-            document.getElementById('sim-out-total').textContent = formatCurrency(currentBalance, 'JPY');
+            document.getElementById('sim-out-invested').textContent = formatCurrency(currentPrincipal, currency);
+            document.getElementById('sim-out-total').textContent = formatCurrency(currentBalance, currency);
 
-            // Draw Chart
             const ctx = document.getElementById('compoundingChart');
             if (charts.compounding) charts.compounding.destroy();
-            
+
             charts.compounding = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
-                        {
-                            label: 'Total Invested',
-                            data: principalData,
-                            borderColor: '#94a3b8',
-                            backgroundColor: 'rgba(148, 163, 184, 0.2)',
-                            fill: true,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Total Value (with Growth)',
-                            data: principalData.map((p, idx) => p + interestData[idx]),
-                            borderColor: '#f43f5e',
-                            backgroundColor: 'rgba(244, 63, 94, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }
+                        { label: 'Total Invested', data: principalData, borderColor: '#94a3b8', backgroundColor: 'rgba(148, 163, 184, 0.2)', fill: true, tension: 0.4 },
+                        { label: 'Total Value (with Growth)', data: principalData.map((p, idx) => p + interestData[idx]), borderColor: '#f43f5e', backgroundColor: 'rgba(244, 63, 94, 0.1)', fill: true, tension: 0.4 }
                     ]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
-                    plugins: { tooltip: { mode: 'index', intersect: false } },
-                    scales: { y: { stacked: false, ticks: { callback: v => '¥' + (v/10000).toFixed(0) + 'k' } } }
+                    plugins: {
+                        tooltip: { mode: 'index', intersect: false, callbacks: { label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw, currency)}` } }
+                    },
+                    scales: {
+                        y: { stacked: false, ticks: { callback: v => formatCurrency(v, currency) } }
+                    }
                 }
             });
+        };
+
+        window.changeBaseCurrency = function(currency) {
+            if (!SUPPORTED_CURRENCIES[currency]) return;
+            window.appState.baseCurrency = currency;
+            try { localStorage.setItem('wealth_base_currency', currency); } catch (e) {}
+            const select = document.getElementById('base-currency-select');
+            if (select) select.value = currency;
+            const status = document.getElementById('base-currency-status');
+            if (status) status.textContent = `Current base currency: ${currency} — ${SUPPORTED_CURRENCIES[currency]}`;
+            const dashboardCurrency = document.getElementById('dash-base-currency');
+            if (dashboardCurrency) dashboardCurrency.textContent = currency;
+            updateUI();
+            if (document.getElementById('page-compounding') && !document.getElementById('page-compounding').classList.contains('hidden')) {
+                renderCompoundingAssetOptions();
+                runSimulation();
+            }
+            showToast(`Base Currency changed to ${currency}`);
+        };
+
+        function syncBaseCurrencySettingsUI() {
+            const currency = window.appState.baseCurrency || 'JPY';
+            const select = document.getElementById('base-currency-select');
+            const status = document.getElementById('base-currency-status');
+            const dashboardCurrency = document.getElementById('dash-base-currency');
+            if (select) select.value = currency;
+            if (status) status.textContent = `Current base currency: ${currency} — ${SUPPORTED_CURRENCIES[currency] || currency}`;
+            if (dashboardCurrency) dashboardCurrency.textContent = currency;
         }
 
         window.navigate = function(pageId) {
@@ -1369,7 +1500,8 @@
 
             // Special trigger for Dashboard charts resizing
             if(pageId === 'dashboard') updateUI();
-            if(pageId === 'compounding') runSimulation();
+            if(pageId === 'compounding') { renderCompoundingAssetOptions(); runSimulation(); }
+            if(pageId === 'settings') syncBaseCurrencySettingsUI();
         }
 
         window.openAddMenu = () => {
