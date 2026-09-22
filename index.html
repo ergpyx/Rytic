@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riyan ❤️ Tiyas - Our Wealth Journey</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e', // Rose 500 for romantic accent
+                            600: '#e11d48',
+                            900: '#881337',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Modal Transitions */
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms, transform 200ms; }
+        .modal-exit { opacity: 1; transform: scale(1); }
+        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: opacity 200ms, transform 200ms; }
+        
+        /* Nav active state */
+        .nav-item.active { background-color: #fff1f2; color: #e11d48; font-weight: 600; }
+        .nav-item.active i { color: #f43f5e; }
+        
+        /* Floating Add Button for Mobile */
+        .fab { box-shadow: 0 4px 14px 0 rgba(244, 63, 94, 0.39); }
+    </style>
+</head>
+<body class="text-slate-800 h-screen overflow-hidden flex bg-slate-50">
+
+    <!-- Desktop Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col h-full z-10 shadow-sm">
+        <div class="p-6 border-b border-slate-100 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-500 shadow-sm">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-slate-800 leading-tight">Riyan & Tiyas</h1>
+                <p class="text-xs text-slate-500 font-medium">Our Wealth Journey</p>
+            </div>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="#" onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors">
+                <i class="fa-solid fa-chart-pie w-5 text-center text-slate-400"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" onclick="navigate('assets')" id="nav-assets" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors">
+                <i class="fa-solid fa-wallet w-5 text-center text-slate-400"></i>
+                <span>Assets</span>
+            </a>
+            <a href="#" onclick="navigate('investments')" id="nav-investments" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors">
+                <i class="fa-solid fa-arrow-trend-up w-5 text-center text-slate-400"></i>
+                <span>Investments</span>
+            </a>
+            <a href="#" onclick="navigate('contributions')" id="nav-contributions" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors">
+                <i class="fa-solid fa-hand-holding-dollar w-5 text-center text-slate-400"></i>
+                <span>Contributions</span>
+            </a>
+            <a href="#" onclick="navigate('goals')" id="nav-goals" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors">
+                <i class="fa-solid fa-bullseye w-5 text-center text-slate-400"></i>
+                <span>Goals</span>
+            </a>
+            <a href="#" onclick="navigate('compounding')" id="nav-compounding" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors">
+                <i class="fa-solid fa-calculator w-5 text-center text-slate-400"></i>
+                <span>Compounding</span>
+            </a>
+        </nav>
+        <div class="p-4 border-t border-slate-100">
+            <button onclick="openAddMenu()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Record</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden">
+        <!-- Mobile Header -->
+        <header class="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center z-10 shadow-sm">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full bg-brand-50 flex items-center justify-center text-brand-500">
+                    <i class="fa-solid fa-heart text-sm"></i>
+                </div>
+                <h1 class="font-bold text-slate-800">R & T Wealth</h1>
+            </div>
+            <button onclick="openAddMenu()" class="text-brand-500 w-8 h-8 bg-brand-50 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </header>
+
+        <!-- Pages Container -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 relative" id="pages-container">
+            
+            <!-- DASHBOARD -->
+            <div id="page-dashboard" class="page-section max-w-5xl mx-auto space-y-6">
+                <!-- Hero -->
+                <div class="bg-gradient-to-br from-brand-500 to-rose-400 rounded-2xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 opacity-10">
+                        <i class="fa-solid fa-heart text-9xl"></i>
+                    </div>
+                    <p class="text-brand-100 font-medium mb-1">Total Shared Wealth</p>
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tight" id="dash-total-wealth">¥ 0</h2>
+                    <div class="mt-4 inline-flex items-center space-x-1 bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
+                        <i class="fa-solid fa-circle-info text-xs"></i>
+                        <span>Base Currency: JPY</span>
+                    </div>
+                </div>
+
+                <!-- Contribution Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-semibold text-slate-700">Riyan</h3>
+                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Partner</span>
+                        </div>
+                        <p class="text-2xl font-bold text-slate-900" id="dash-riyan-total">¥ 0</p>
+                        <p class="text-sm text-slate-500 mt-1" id="dash-riyan-pct">0% of total</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-semibold text-slate-700">Tiyas</h3>
+                            <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Partner</span>
+                        </div>
+                        <p class="text-2xl font-bold text-slate-900" id="dash-tiyas-total">¥ 0</p>
+                        <p class="text-sm text-slate-500 mt-1" id="dash-tiyas-pct">0% of total</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-semibold text-slate-700">Shared</h3>
+                            <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded">Joint</span>
+                        </div>
+                        <p class="text-2xl font-bold text-slate-900" id="dash-shared-total">¥ 0</p>
+                        <p class="text-sm text-slate-500 mt-1" id="dash-shared-pct">0% of total</p>
+                    </div>
+                </div>
+
+                <!-- Charts Area -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+                        <h3 class="font-semibold text-slate-800 mb-4">Portfolio Allocation</h3>
+                        <div class="relative h-64 w-full flex justify-center items-center">
+                            <canvas id="allocationChart"></canvas>
+                            <div id="allocationEmpty" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 hidden">
+                                <i class="fa-solid fa-chart-pie text-3xl mb-2"></i>
+                                <p class="text-sm">No data yet</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+                        <h3 class="font-semibold text-slate-800 mb-4">Contribution History</h3>
+                        <div class="relative h-64 w-full">
+                            <canvas id="compoundGrowthChart"></canvas>
+                             <div id="contributionEmpty" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 hidden">
+                                <i class="fa-solid fa-chart-bar text-3xl mb-2"></i>
+                                <p class="text-sm">No contributions yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASSETS -->
+            <div id="page-assets" class="page-section max-w-5xl mx-auto space-y-6 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Assets</h2>
+                        <p class="text-sm text-slate-500">Manual tracking for cash, property, and generic items.</p>
+                    </div>
+                    <button onclick="openAssetModal()" class="hidden md:flex bg-brand-500 hover:bg-brand-600 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i><span>Add Asset</span>
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider">
+                                    <th class="p-4 font-medium">Name</th>
+                                    <th class="p-4 font-medium">Owner</th>
+                                    <th class="p-4 font-medium text-right">Value (Base)</th>
+                                    <th class="p-4 font-medium text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assets-list" class="divide-y divide-slate-100 text-sm">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="assets-empty" class="p-10 text-center hidden">
+                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-slate-800">No assets yet</h3>
+                        <p class="text-slate-500 text-sm mt-1 mb-4">Start tracking your cash, property, or custom assets.</p>
+                        <button onclick="openAssetModal()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg font-medium shadow-sm transition-colors">
+                            + Add Asset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INVESTMENTS -->
+            <div id="page-investments" class="page-section max-w-5xl mx-auto space-y-6 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Investments</h2>
+                        <p class="text-sm text-slate-500">Track stocks, ETFs, crypto, and their market performance.</p>
+                    </div>
+                    <button onclick="openInvestmentModal()" class="hidden md:flex bg-brand-500 hover:bg-brand-600 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i><span>Add Investment</span>
+                    </button>
+                </div>
+
+                <div id="investments-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Populated by JS -->
+                </div>
+                
+                <div id="investments-empty" class="bg-white rounded-xl border border-slate-200 p-10 text-center shadow-sm hidden">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-slate-800">No investments yet ❤️</h3>
+                    <p class="text-slate-500 text-sm mt-1 mb-4">Start tracking your first investment and watch your shared wealth grow.</p>
+                    <button onclick="openInvestmentModal()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg font-medium shadow-sm transition-colors">
+                        + Add Investment
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTRIBUTIONS -->
+            <div id="page-contributions" class="page-section max-w-5xl mx-auto space-y-6 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Contributions</h2>
+                        <p class="text-sm text-slate-500">Record who added money and when.</p>
+                    </div>
+                    <button onclick="openContributionModal()" class="hidden md:flex bg-brand-500 hover:bg-brand-600 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i><span>Add Contribution</span>
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider">
+                                    <th class="p-4 font-medium">Date</th>
+                                    <th class="p-4 font-medium">Person</th>
+                                    <th class="p-4 font-medium">Target Asset</th>
+                                    <th class="p-4 font-medium text-right">Amount (Base)</th>
+                                    <th class="p-4 font-medium text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contributions-list" class="divide-y divide-slate-100 text-sm">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="contributions-empty" class="p-10 text-center hidden">
+                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-slate-800">No contributions yet</h3>
+                        <button onclick="openContributionModal()" class="mt-4 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg font-medium shadow-sm transition-colors">
+                            + Add Contribution
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GOALS -->
+            <div id="page-goals" class="page-section max-w-5xl mx-auto space-y-6 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Financial Goals</h2>
+                        <p class="text-sm text-slate-500">Track progress toward your shared dreams.</p>
+                    </div>
+                    <button onclick="openGoalModal()" class="hidden md:flex bg-brand-500 hover:bg-brand-600 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i><span>Add Goal</span>
+                    </button>
+                </div>
+
+                <div id="goals-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated by JS -->
+                </div>
+                
+                <div id="goals-empty" class="bg-white rounded-xl border border-slate-200 p-10 text-center shadow-sm hidden">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-slate-800">No goals set</h3>
+                    <button onclick="openGoalModal()" class="mt-4 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg font-medium shadow-sm transition-colors">
+                        + Add Goal
+                    </button>
+                </div>
+            </div>
+
+            <!-- COMPOUNDING SIMULATOR -->
+            <div id="page-compounding" class="page-section max-w-5xl mx-auto space-y-6 hidden">
+                 <div>
+                    
+        <!-- Wealth Analytics & Charts -->
+        <section id="analytics-section" class="content-section hidden">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Wealth Analytics</h2>
+                <p class="text-gray-500">Grafik untuk melihat perkembangan aset, investasi, cash flow, alokasi, dan progress target.</p>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800">Net Worth by Month</h3>
+                            <p class="text-xs text-gray-500">Perkembangan total kekayaan dari data kontribusi.</p>
+                        </div>
+                    </div>
+                    <div class="h-72"><canvas id="netWorthTrendChart"></canvas></div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div class="mb-4">
+                        <h3 class="font-bold text-gray-800">Asset Allocation</h3>
+                        <p class="text-xs text-gray-500">Komposisi nilai aset dan investasi saat ini.</p>
+                    </div>
+                    <div class="h-72"><canvas id="assetAllocationChart"></canvas></div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div class="mb-4">
+                        <h3 class="font-bold text-gray-800">Investment Performance</h3>
+                        <p class="text-xs text-gray-500">Nilai beli dibandingkan nilai pasar saat ini.</p>
+                    </div>
+                    <div class="h-72"><canvas id="investmentPerformanceChart"></canvas></div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div class="mb-4">
+                        <h3 class="font-bold text-gray-800">Goals Progress</h3>
+                        <p class="text-xs text-gray-500">Progress masing-masing target finansial.</p>
+                    </div>
+                    <div class="h-72"><canvas id="goalsProgressChart"></canvas></div>
+                </div>
+
+                
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div class="mb-4">
+                        <h3 class="font-bold text-gray-800">Investment Profit / Loss</h3>
+                        <p class="text-xs text-gray-500">Untung/rugi berdasarkan harga beli rata-rata dan harga sekarang.</p>
+                    </div>
+                    <div class="h-72"><canvas id="profitLossChart"></canvas></div>
+                </div>
+            </div>
+        </section>
+
+<h2 class="text-2xl font-bold text-slate-800">Compounding Simulator</h2>
+                    <p class="text-sm text-slate-500">Project your future wealth based on contributions and returns.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 lg:col-span-1">
+                        <h3 class="font-semibold text-slate-800 mb-4">Simulation Inputs</h3>
+                        <form id="simulator-form" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Initial Capital from Assets (JPY)</label>
+                                <select id="sim-asset-source" onchange="syncCompoundingFromAssets()" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none mb-2">
+                                    <option value="all">All Assets</option>
+                                </select>
+                                <input type="number" id="sim-principal" readonly class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-semibold text-slate-700 outline-none" value="0">
+                                <p id="sim-asset-helper" class="text-[11px] text-slate-400 mt-1">Automatically synced from Assets.</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Monthly Contribution (JPY)</label>
+                                <input type="number" id="sim-monthly" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none" value="50000">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Estimated Annual Return (%)</label>
+                                <input type="number" id="sim-rate" step="0.1" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none" value="7">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Duration (Years)</label>
+                                <input type="number" id="sim-years" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none" value="10">
+                            </div>
+                            <button type="button" onclick="runSimulation()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-2.5 rounded-lg shadow-sm transition-colors mt-2">
+                                Run Simulation
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 lg:col-span-2 flex flex-col">
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                                <p class="text-xs text-slate-500 font-medium">Total Invested</p>
+                                <p class="text-xl font-bold text-slate-800 mt-1" id="sim-out-invested">¥ 0</p>
+                            </div>
+                            <div class="bg-brand-50 p-4 rounded-lg border border-brand-100">
+                                <p class="text-xs text-brand-600 font-medium">Projected Final Value</p>
+                                <p class="text-xl font-bold text-brand-600 mt-1" id="sim-out-total">¥ 0</p>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-h-[300px] relative">
+                            <canvas id="compoundingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global "Add Menu" for Mobile -->
+            <div id="mobile-add-menu" class="fixed inset-0 bg-slate-900/50 z-40 hidden flex-col justify-end">
+                <div class="bg-white rounded-t-2xl p-4 transform transition-transform translate-y-full" id="mobile-add-menu-content">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-slate-800 text-lg">Add New Record</h3>
+                        <button onclick="closeAddMenu()" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-600 bg-slate-100 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 pb-6">
+                        <button onclick="closeAddMenu(); openAssetModal()" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-xl hover:bg-slate-50">
+                            <i class="fa-solid fa-wallet text-brand-500 text-2xl mb-2"></i>
+                            <span class="text-sm font-medium">Asset</span>
+                        </button>
+                        <button onclick="closeAddMenu(); openInvestmentModal()" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-xl hover:bg-slate-50">
+                            <i class="fa-solid fa-arrow-trend-up text-brand-500 text-2xl mb-2"></i>
+                            <span class="text-sm font-medium">Investment</span>
+                        </button>
+                        <button onclick="closeAddMenu(); openContributionModal()" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-xl hover:bg-slate-50">
+                            <i class="fa-solid fa-hand-holding-dollar text-brand-500 text-2xl mb-2"></i>
+                            <span class="text-sm font-medium">Contribution</span>
+                        </button>
+                        <button onclick="closeAddMenu(); openGoalModal()" class="flex flex-col items-center justify-center p-4 border border-slate-200 rounded-xl hover:bg-slate-50">
+                            <i class="fa-solid fa-bullseye text-brand-500 text-2xl mb-2"></i>
+                            <span class="text-sm font-medium">Goal</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generic Data Modal Template (Controlled by JS) -->
+            <div id="crud-modal" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+                <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+                    <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                        <h3 class="font-bold text-slate-800 text-lg" id="modal-title">Add Record</h3>
+                        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="p-5 overflow-y-auto" id="modal-body">
+                        <!-- Dynamic Form Content -->
+                    </div>
+                    <div class="px-5 py-4 border-t border-slate-100 bg-slate-50 flex justify-end space-x-3">
+                        <button onclick="closeModal()" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-200 bg-slate-100 transition-colors">Cancel</button>
+                        <button id="modal-save-btn" onclick="submitModalForm()" class="px-4 py-2 rounded-lg text-sm font-medium text-white bg-brand-500 hover:bg-brand-600 transition-colors flex items-center">
+                            <i class="fa-solid fa-spinner fa-spin mr-2 hidden" id="modal-spinner"></i>
+                            <span id="modal-save-text">Save Changes</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirm Delete Dialog -->
+            <div id="confirm-dialog" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+                <div class="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden p-6 text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500 text-2xl">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-xl mb-2" id="confirm-title">Are you sure?</h3>
+                    <p class="text-sm text-slate-500 mb-6" id="confirm-message">This action cannot be undone.</p>
+                    <div class="flex justify-center space-x-3 w-full">
+                        <button onclick="closeConfirm()" class="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors">Cancel</button>
+                        <button id="confirm-btn" class="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium text-white bg-red-500 hover:bg-red-600 transition-colors">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Notification -->
+            <div id="toast" class="fixed top-4 right-4 bg-slate-800 text-white px-4 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-[-150%] opacity-0 z-50 flex items-center space-x-3">
+                <i id="toast-icon" class="fa-solid fa-check-circle text-green-400"></i>
+                <span id="toast-message" class="text-sm font-medium">Success!</span>
+            </div>
+
+        </div> <!-- End Pages Container -->
+
+        <!-- Mobile Bottom Nav -->
+        <nav class="md:hidden bg-white border-t border-slate-200 flex justify-around p-2 pb-safe z-10">
+            <button onclick="navigate('dashboard')" class="mobile-nav-item flex flex-col items-center p-2 text-brand-500" data-target="dashboard">
+                <i class="fa-solid fa-chart-pie mb-1"></i><span class="text-[10px] font-medium">Home</span>
+            </button>
+            <button onclick="navigate('assets')" class="mobile-nav-item flex flex-col items-center p-2 text-slate-400" data-target="assets">
+                <i class="fa-solid fa-wallet mb-1"></i><span class="text-[10px] font-medium">Assets</span>
+            </button>
+            <div class="relative -top-5">
+                <button onclick="openAddMenu()" class="w-12 h-12 rounded-full bg-brand-500 text-white flex items-center justify-center fab text-xl">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            <button onclick="navigate('investments')" class="mobile-nav-item flex flex-col items-center p-2 text-slate-400" data-target="investments">
+                <i class="fa-solid fa-arrow-trend-up mb-1"></i><span class="text-[10px] font-medium">Invest</span>
+            </button>
+            <button onclick="navigate('contributions')" class="mobile-nav-item flex flex-col items-center p-2 text-slate-400" data-target="contributions">
+                <i class="fa-solid fa-hand-holding-dollar mb-1"></i><span class="text-[10px] font-medium">Contribs</span>
+            </button>
+        </nav>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, collection, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global state
+        window.appState = {
+            assets: [],
+            investments: [],
+            contributions: [],
+            goals: [],
+            userId: null,
+            baseCurrency: 'JPY',
+            db: null,
+            collectionPrefix: '' // Will be /artifacts/{appId}/users/{userId}/
+        };
+        
+        let charts = {
+            allocation: null,
+            contribution: null,
+            compounding: null
+        };
+
+        // Firebase configuration
+        // Project: rytic-b4bfb
+        const appId = 'rytic-b4bfb';
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmHWRJs1cpWGe-3Hqhmv62U_IFpy0VaAA",
+            authDomain: "rytic-b4bfb.firebaseapp.com",
+            projectId: "rytic-b4bfb",
+            storageBucket: "rytic-b4bfb.firebasestorage.app",
+            messagingSenderId: "470005098057",
+            appId: "1:470005098057:web:2448e14dcfbdcf137e8198"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        window.appState.db = db;
+
+        // Initialize Auth FIRST (MANDATORY RULE 3)
+        async function initAuth() {
+            try {
+                // Use Firebase Anonymous Authentication.
+                // Make sure Anonymous sign-in is enabled in Firebase Console.
+                await signInAnonymously(auth);
+                
+                const user = auth.currentUser;
+                if (!user) throw new Error("Auth failed");
+                
+                window.appState.userId = user.uid;
+                // MANDATORY RULE 1: Strict Paths
+                // Shared portfolio root for both Riyan and Tiyas.
+            // Firestore Rules will restrict access to the authorized UIDs.
+            window.appState.collectionPrefix = 'portfolios/ryan-tiyas';
+                
+                console.log("Auth successful, initializing data listeners...");
+                initDataListeners();
+            } catch (error) {
+                console.error("Authentication error:", error);
+                showToast("Offline mode enabled", "error");
+                window.appState.userId = "local-user";
+                updateUI();
+            }
+        }
+
+        function initDataListeners() {
+            const { db, collectionPrefix } = window.appState;
+            
+            // Listen to Assets
+            onSnapshot(collection(db, `${collectionPrefix}/assets`), (snapshot) => {
+                window.appState.assets = snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(doc => !doc.isDeleted); // Soft delete filtering
+                updateUI();
+            }, (error) => console.error("Assets listen error", error));
+
+            // Listen to Investments
+            onSnapshot(collection(db, `${collectionPrefix}/investments`), (snapshot) => {
+                window.appState.investments = snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(doc => !doc.isDeleted);
+                updateUI();
+            }, (error) => console.error("Investments listen error", error));
+
+            // Listen to Contributions
+            onSnapshot(collection(db, `${collectionPrefix}/contributions`), (snapshot) => {
+                window.appState.contributions = snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(doc => !doc.isDeleted)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort latest first
+                updateUI();
+            }, (error) => console.error("Contributions listen error", error));
+
+            // Listen to Goals
+            onSnapshot(collection(db, `${collectionPrefix}/goals`), (snapshot) => {
+                window.appState.goals = snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(doc => !doc.isDeleted);
+                updateUI();
+            }, (error) => console.error("Goals listen error", error));
+        }
+
+        // Helper: Convert to Base Currency (Hardcoded FX for MVP simplicity, as per PRD "Custom Currency Works" we allow manual values, but need defaults)
+        function toBase(amount, currency) {
+            const rates = { JPY: 1, USD: 145, IDR: 0.0095 }; // Mock rates relative to JPY
+            return (amount * (rates[currency] || 1));
+        }
+
+        function formatCurrency(amount, currency = 'JPY') {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: currency,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function updateUI() {
+            // Recalculate Totals
+            let riyanTotal = 0, tiyasTotal = 0, sharedTotal = 0;
+            
+            const calcOwner = (item, baseVal) => {
+                if (item.ownerId === 'riyan') riyanTotal += baseVal;
+                else if (item.ownerId === 'tiyas') tiyasTotal += baseVal;
+                else sharedTotal += baseVal;
+            };
+
+            window.appState.assets.forEach(a => calcOwner(a, toBase(a.currentValue, a.currency)));
+            window.appState.investments.forEach(i => calcOwner(i, toBase(i.currentValue, i.currency)));
+
+            const totalWealth = riyanTotal + tiyasTotal + sharedTotal;
+
+            // Update Dashboard Text
+            document.getElementById('dash-total-wealth').textContent = formatCurrency(totalWealth, 'JPY');
+            document.getElementById('dash-riyan-total').textContent = formatCurrency(riyanTotal, 'JPY');
+            document.getElementById('dash-tiyas-total').textContent = formatCurrency(tiyasTotal, 'JPY');
+            document.getElementById('dash-shared-total').textContent = formatCurrency(sharedTotal, 'JPY');
+
+            document.getElementById('dash-riyan-pct').textContent = totalWealth ? `${((riyanTotal/totalWealth)*100).toFixed(1)}% of total` : '0% of total';
+            document.getElementById('dash-tiyas-pct').textContent = totalWealth ? `${((tiyasTotal/totalWealth)*100).toFixed(1)}% of total` : '0% of total';
+            document.getElementById('dash-shared-pct').textContent = totalWealth ? `${((sharedTotal/totalWealth)*100).toFixed(1)}% of total` : '0% of total';
+
+            // Render Modules
+            renderAssets();
+            renderInvestments();
+            renderContributions();
+            renderGoals();
+            renderCompoundingAssetOptions();
+            
+            // Only update dashboard charts if visible to save performance
+            if(document.getElementById('page-dashboard').classList.contains('hidden') === false) {
+                renderDashboardCharts(riyanTotal, tiyasTotal, sharedTotal);
+            }
+        }
+
+        function renderAssets() {
+            const list = document.getElementById('assets-list');
+            const empty = document.getElementById('assets-empty');
+            const assets = window.appState.assets;
+
+            list.innerHTML = '';
+            if (assets.length === 0) {
+                empty.classList.remove('hidden');
+                list.parentElement.classList.add('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+            list.parentElement.classList.remove('hidden');
+
+            assets.forEach(asset => {
+                const baseVal = toBase(asset.currentValue, asset.currency);
+                const ownerColor = asset.ownerId === 'riyan' ? 'blue' : (asset.ownerId === 'tiyas' ? 'purple' : 'brand');
+                
+                list.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors group">
+                        <td class="p-4">
+                            <div class="font-medium text-slate-800">${asset.name}</div>
+                            <div class="text-xs text-slate-500 capitalize">${asset.type}</div>
+                        </td>
+                        <td class="p-4">
+                            <span class="inline-flex px-2 py-1 text-[10px] font-bold rounded bg-${ownerColor}-50 text-${ownerColor}-600 capitalize">
+                                ${asset.ownerId}
+                            </span>
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="font-bold text-slate-800">${formatCurrency(baseVal, 'JPY')}</div>
+                            ${asset.currency !== 'JPY' ? `<div class="text-xs text-slate-400">${formatCurrency(asset.currentValue, asset.currency)}</div>` : ''}
+                        </td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="window.editRecord('asset', '${asset.id}')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
+                                <button onclick="window.deleteRecordConfirm('assets', '${asset.id}')" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderInvestments() {
+            const grid = document.getElementById('investments-grid');
+            const empty = document.getElementById('investments-empty');
+            const invs = window.appState.investments;
+
+            grid.innerHTML = '';
+            if (invs.length === 0) {
+                empty.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            invs.forEach(inv => {
+                const pnl = inv.currentValue - inv.totalInvested;
+                const pnlPct = inv.totalInvested ? ((pnl / inv.totalInvested) * 100).toFixed(2) : 0;
+                const isPos = pnl >= 0;
+                const ownerColor = inv.ownerId === 'riyan' ? 'blue' : (inv.ownerId === 'tiyas' ? 'purple' : 'brand');
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow relative group">
+                        <div class="absolute top-4 right-4 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-sm rounded-lg p-1">
+                            <button onclick="window.refreshPrice('${inv.id}')" title="Refresh Price" class="w-7 h-7 rounded text-slate-500 hover:bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-rotate-right text-xs"></i></button>
+                            <button onclick="window.editRecord('investment', '${inv.id}')" class="w-7 h-7 rounded text-slate-500 hover:bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="window.deleteRecordConfirm('investments', '${inv.id}')" class="w-7 h-7 rounded text-red-500 hover:bg-red-50 flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                        
+                        <div class="flex justify-between items-start mb-4 pr-10">
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg leading-tight">${inv.name}</h3>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="text-xs font-mono font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">${inv.ticker}</span>
+                                    <span class="inline-flex px-1.5 py-0.5 text-[9px] font-bold rounded bg-${ownerColor}-50 text-${ownerColor}-600 uppercase tracking-wider">${inv.ownerId}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium">Invested</p>
+                                <p class="text-sm font-semibold text-slate-700">${formatCurrency(inv.totalInvested, inv.currency)}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium">Current Value</p>
+                                <p class="text-sm font-semibold text-slate-800">${formatCurrency(inv.currentValue, inv.currency)}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-slate-100 pt-3 flex justify-between items-center">
+                            <p class="text-xs text-slate-400">${inv.units} units @ ${inv.currentPrice}</p>
+                            <div class="flex items-center space-x-1 ${isPos ? 'text-green-500' : 'text-red-500'} bg-${isPos ? 'green' : 'red'}-50 px-2 py-1 rounded">
+                                <i class="fa-solid fa-arrow-${isPos ? 'up' : 'down'} text-[10px]"></i>
+                                <span class="text-xs font-bold">${Math.abs(pnlPct)}%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderContributions() {
+            const list = document.getElementById('contributions-list');
+            const empty = document.getElementById('contributions-empty');
+            const contribs = window.appState.contributions;
+
+            list.innerHTML = '';
+            if (contribs.length === 0) {
+                empty.classList.remove('hidden');
+                list.parentElement.classList.add('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+            list.parentElement.classList.remove('hidden');
+
+            contribs.forEach(c => {
+                const ownerColor = c.personId === 'riyan' ? 'blue' : 'purple';
+                const date = new Date(c.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                
+                list.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors group">
+                        <td class="p-4 text-slate-500">${date}</td>
+                        <td class="p-4">
+                            <span class="inline-flex px-2 py-1 text-[10px] font-bold rounded bg-${ownerColor}-50 text-${ownerColor}-600 capitalize">
+                                ${c.personId}
+                            </span>
+                        </td>
+                        <td class="p-4 text-slate-700 font-medium">${c.targetName || 'General Saving'}</td>
+                        <td class="p-4 text-right">
+                            <div class="font-bold text-green-600">+ ${formatCurrency(c.amount, c.currency)}</div>
+                        </td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="window.deleteRecordConfirm('contributions', '${c.id}')" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderGoals() {
+            const grid = document.getElementById('goals-grid');
+            const empty = document.getElementById('goals-empty');
+            const goals = window.appState.goals;
+
+            grid.innerHTML = '';
+            if (goals.length === 0) {
+                empty.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            goals.forEach(goal => {
+                const pct = Math.min(100, ((goal.currentValue / goal.targetValue) * 100)).toFixed(1);
+                
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm relative group">
+                        <div class="absolute top-4 right-4 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <button onclick="window.editRecord('goal', '${goal.id}')" class="w-7 h-7 rounded bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
+                             <button onclick="window.deleteRecordConfirm('goals', '${goal.id}')" class="w-7 h-7 rounded bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                        <h3 class="font-bold text-slate-800 mb-1 pr-16">${goal.name}</h3>
+                        <p class="text-sm text-slate-500 mb-4">Target: ${formatCurrency(goal.targetValue, goal.currency)}</p>
+                        
+                        <div class="w-full bg-slate-100 rounded-full h-2.5 mb-2 overflow-hidden">
+                            <div class="bg-brand-500 h-2.5 rounded-full transition-all duration-1000" style="width: ${pct}%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs font-medium">
+                            <span class="text-brand-600">${pct}% reached</span>
+                            <span class="text-slate-500">${formatCurrency(goal.currentValue, goal.currency)} saved</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderDashboardCharts(riyan, tiyas, shared) {
+            // Allocation Doughnut
+            const allocCtx = document.getElementById('allocationChart');
+            if(riyan === 0 && tiyas === 0 && shared === 0) {
+                allocCtx.classList.add('hidden');
+                document.getElementById('allocationEmpty').classList.remove('hidden');
+            } else {
+                allocCtx.classList.remove('hidden');
+                document.getElementById('allocationEmpty').classList.add('hidden');
+                
+                if (charts.allocation) charts.allocation.destroy();
+                charts.allocation = new Chart(allocCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Riyan', 'Tiyas', 'Shared'],
+                        datasets: [{
+                            data: [riyan, tiyas, shared],
+                            backgroundColor: ['#3b82f6', '#a855f7', '#f43f5e'],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: { 
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: {family: 'Inter'} } } },
+                        cutout: '70%'
+                    }
+                });
+            }
+
+            // Contribution Bar (Mock Historical grouped by months)
+            const contribCtx = document.getElementById('contributionChart');
+            const cList = window.appState.contributions;
+            if(cList.length === 0) {
+                contribCtx.classList.add('hidden');
+                document.getElementById('contributionEmpty').classList.remove('hidden');
+            } else {
+                contribCtx.classList.remove('hidden');
+                document.getElementById('contributionEmpty').classList.add('hidden');
+                
+                // Process contribs into months
+                let monthlyData = {};
+                cList.forEach(c => {
+                    const month = c.date.substring(0, 7); // YYYY-MM
+                    if(!monthlyData[month]) monthlyData[month] = { riyan: 0, tiyas: 0 };
+                    monthlyData[month][c.personId] += toBase(c.amount, c.currency);
+                });
+                
+                const labels = Object.keys(monthlyData).sort();
+                const riyanData = labels.map(l => monthlyData[l].riyan);
+                const tiyasData = labels.map(l => monthlyData[l].tiyas);
+
+                if (charts.contribution) charts.contribution.destroy();
+                charts.contribution = new Chart(contribCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels.map(l => {
+                            const d = new Date(l + '-01');
+                            return d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                        }),
+                        datasets: [
+                            { label: 'Riyan', data: riyanData, backgroundColor: '#3b82f6', borderRadius: 4 },
+                            { label: 'Tiyas', data: tiyasData, backgroundColor: '#a855f7', borderRadius: 4 }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { x: { stacked: true, grid: {display:false} }, y: { stacked: true, border: {display:false} } },
+                        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: {family: 'Inter'} } } }
+                    }
+                });
+            }
+        }
+
+        let currentModalConfig = null; // { collection, id, type }
+
+        window.openModal = function(html, title, config) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').innerHTML = html;
+            currentModalConfig = config;
+            document.getElementById('crud-modal').classList.remove('hidden');
+            
+            // Auto focus first input
+            setTimeout(() => {
+                const firstInput = document.querySelector('#modal-body input');
+                if(firstInput) firstInput.focus();
+            }, 100);
+        }
+
+        window.closeModal = function() {
+            document.getElementById('crud-modal').classList.add('hidden');
+            currentModalConfig = null;
+            resetModalBtn();
+        }
+        
+        function setModalLoading(isLoading) {
+            const btn = document.getElementById('modal-save-btn');
+            const spinner = document.getElementById('modal-spinner');
+            const text = document.getElementById('modal-save-text');
+            if(isLoading) {
+                btn.disabled = true;
+                btn.classList.add('opacity-70');
+                spinner.classList.remove('hidden');
+                text.textContent = 'Saving...';
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('opacity-70');
+                spinner.classList.add('hidden');
+                text.textContent = 'Save Changes';
+            }
+        }
+        
+        function resetModalBtn() {
+            setModalLoading(false);
+        }
+
+        // Shared dynamic form generator
+        function generateFormHTML(fields, values = {}) {
+            return `<form id="dynamic-form" class="space-y-4">
+                ${fields.map(f => {
+                    const val = values[f.id] !== undefined ? values[f.id] : (f.default || '');
+                    if(f.type === 'select') {
+                        return `<div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">${f.label}</label>
+                            <select id="${f.id}" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none" required>
+                                ${f.options.map(o => `<option value="${o.value}" ${val === o.value ? 'selected' : ''}>${o.text}</option>`).join('')}
+                            </select>
+                        </div>`;
+                    }
+                    return `<div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">${f.label}</label>
+                        <input type="${f.type}" id="${f.id}" value="${val}" ${f.required ? 'required' : ''} ${f.step ? `step="${f.step}"` : ''} class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none">
+                    </div>`;
+                }).join('')}
+            </form>`;
+        }
+
+        window.openAssetModal = (id = null) => {
+            const asset = id ? window.appState.assets.find(a => a.id === id) : null;
+            const fields = [
+                { id: 'name', label: 'Asset Name', type: 'text', required: true },
+                { id: 'type', label: 'Asset Type', type: 'select', options: [{value:'cash', text:'Cash/Bank'}, {value:'property', text:'Property'}, {value:'other', text:'Other'}] },
+                { id: 'ownerId', label: 'Owner', type: 'select', options: [{value:'riyan', text:'Riyan'}, {value:'tiyas', text:'Tiyas'}, {value:'shared', text:'Shared'}] },
+                { id: 'currency', label: 'Currency', type: 'select', options: [{value:'JPY', text:'JPY'}, {value:'USD', text:'USD'}, {value:'IDR', text:'IDR'}] },
+                { id: 'currentValue', label: 'Current Value', type: 'number', required: true, step: "0.01" }
+            ];
+            openModal(generateFormHTML(fields, asset || {}), id ? 'Edit Asset' : 'Add Asset', { collection: 'assets', id, type: 'asset' });
+        }
+
+        window.openInvestmentModal = (id = null) => {
+            const inv = id ? window.appState.investments.find(a => a.id === id) : null;
+            const fields = [
+                { id: 'name', label: 'Investment Name (e.g. Apple Inc)', type: 'text', required: true },
+                { id: 'ticker', label: 'Ticker Symbol', type: 'text', required: true },
+                { id: 'ownerId', label: 'Owner', type: 'select', options: [{value:'riyan', text:'Riyan'}, {value:'tiyas', text:'Tiyas'}, {value:'shared', text:'Shared'}] },
+                { id: 'currency', label: 'Currency', type: 'select', options: [{value:'USD', text:'USD'}, {value:'JPY', text:'JPY'}] },
+                { id: 'units', label: 'Units Owned', type: 'number', required: true, step: "0.0001" },
+                { id: 'averageBuyPrice', label: 'Avg Buy Price', type: 'number', required: true, step: "0.01" },
+                { id: 'currentPrice', label: 'Current Market Price', type: 'number', required: true, step: "0.01" }
+            ];
+            openModal(generateFormHTML(fields, inv || {}), id ? 'Edit Investment' : 'Add Investment', { collection: 'investments', id, type: 'investment' });
+        }
+
+        window.openContributionModal = (id = null) => {
+             const c = id ? window.appState.contributions.find(a => a.id === id) : null;
+             const fields = [
+                { id: 'personId', label: 'Person', type: 'select', options: [{value:'riyan', text:'Riyan'}, {value:'tiyas', text:'Tiyas'}] },
+                { id: 'amount', label: 'Amount', type: 'number', required: true, step: "0.01" },
+                { id: 'currency', label: 'Currency', type: 'select', options: [{value:'JPY', text:'JPY'}, {value:'USD', text:'USD'}, {value:'IDR', text:'IDR'}] },
+                { id: 'date', label: 'Date', type: 'date', required: true, default: new Date().toISOString().split('T')[0] },
+                { id: 'targetName', label: 'Destination / Note', type: 'text', required: false }
+             ];
+             openModal(generateFormHTML(fields, c || {}), id ? 'Edit Contribution' : 'Add Contribution', { collection: 'contributions', id, type: 'contribution' });
+        }
+
+        window.openGoalModal = (id = null) => {
+             const g = id ? window.appState.goals.find(a => a.id === id) : null;
+             const fields = [
+                { id: 'name', label: 'Goal Name (e.g. 🏡 Our First Home)', type: 'text', required: true },
+                { id: 'targetValue', label: 'Target Amount', type: 'number', required: true, step: "0.01" },
+                { id: 'currentValue', label: 'Current Amount Saved', type: 'number', required: true, step: "0.01", default: 0 },
+                { id: 'currency', label: 'Currency', type: 'select', options: [{value:'JPY', text:'JPY'}, {value:'USD', text:'USD'}] }
+             ];
+             openModal(generateFormHTML(fields, g || {}), id ? 'Edit Goal' : 'Add Goal', { collection: 'goals', id, type: 'goal' });
+        }
+
+        // Central Edit Dispatcher
+        window.editRecord = (type, id) => {
+            if(type === 'asset') openAssetModal(id);
+            else if(type === 'investment') openInvestmentModal(id);
+            else if(type === 'goal') openGoalModal(id);
+        }
+
+        window.submitModalForm = async () => {
+            const form = document.getElementById('dynamic-form');
+            if(!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            setModalLoading(true);
+            const { db, collectionPrefix, userId } = window.appState;
+            if(!userId) { showToast("Authentication error", "error"); setModalLoading(false); return; }
+
+            const data = {};
+            Array.from(form.elements).forEach(el => {
+                if(el.id) {
+                    // Auto cast numbers
+                    data[el.id] = el.type === 'number' ? parseFloat(el.value) : el.value;
+                }
+            });
+
+            // Special derivations
+            if(currentModalConfig.type === 'investment') {
+                data.totalInvested = data.units * data.averageBuyPrice;
+                data.currentValue = data.units * data.currentPrice;
+            }
+
+            if (firebaseConfig.apiKey === "mock" || !collectionPrefix) {
+                // LOCAL MODE
+                const collectionList = window.appState[currentModalConfig.collection];
+                if (currentModalConfig.id) {
+                    const idx = collectionList.findIndex(i => i.id === currentModalConfig.id);
+                    if(idx > -1) {
+                        collectionList[idx] = { ...collectionList[idx], ...data, updatedAt: new Date().toISOString() };
+                    }
+                    showToast("Record updated (Local)");
+                } else {
+                    collectionList.push({
+                        id: Math.random().toString(36).substr(2, 9),
+                        ...data,
+                        isDeleted: false,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    });
+                    showToast("Record created (Local)");
+                }
+                updateUI();
+                closeModal();
+                return;
+            }
+
+            try {
+                const path = `${collectionPrefix}/${currentModalConfig.collection}`;
+                if(currentModalConfig.id) {
+                    // Update
+                    const ref = doc(db, path, currentModalConfig.id);
+                    await updateDoc(ref, {
+                        ...data,
+                        updatedAt: serverTimestamp()
+                    });
+                    showToast("Record updated successfully");
+                } else {
+                    // Create
+                    await addDoc(collection(db, path), {
+                        ...data,
+                        isDeleted: false,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    });
+                    showToast("Record created successfully");
+                }
+                closeModal();
+            } catch (error) {
+                console.error("Write error:", error);
+                showToast("Failed to save data. Try again.", "error");
+                setModalLoading(false);
+            }
+        }
+
+        let pendingDelete = null;
+        window.deleteRecordConfirm = (collectionName, id) => {
+            pendingDelete = { collection: collectionName, id: id };
+            document.getElementById('confirm-dialog').classList.remove('hidden');
+        }
+
+        window.closeConfirm = () => {
+            document.getElementById('confirm-dialog').classList.add('hidden');
+            pendingDelete = null;
+            document.getElementById('confirm-btn').textContent = 'Delete';
+            document.getElementById('confirm-btn').disabled = false;
+        }
+
+        document.getElementById('confirm-btn').addEventListener('click', async () => {
+            if(!pendingDelete) return;
+            const btn = document.getElementById('confirm-btn');
+            btn.disabled = true;
+            btn.textContent = 'Deleting...';
+            
+            const { db, collectionPrefix, userId } = window.appState;
+            if(!userId) return;
+
+            if (firebaseConfig.apiKey === "mock" || !collectionPrefix) {
+                // LOCAL MODE
+                const collectionList = window.appState[pendingDelete.collection];
+                const idx = collectionList.findIndex(i => i.id === pendingDelete.id);
+                if (idx > -1) {
+                    collectionList.splice(idx, 1); // hard delete in local mode
+                }
+                updateUI();
+                showToast("Record deleted (Local)");
+                closeConfirm();
+                return;
+            }
+
+            try {
+                // Soft delete
+                const ref = doc(db, `${collectionPrefix}/${pendingDelete.collection}`, pendingDelete.id);
+                await updateDoc(ref, {
+                    isDeleted: true,
+                    deletedAt: serverTimestamp()
+                });
+                showToast("Record deleted");
+                closeConfirm();
+            } catch (error) {
+                console.error("Delete error:", error);
+                showToast("Failed to delete record.", "error");
+                btn.disabled = false;
+                btn.textContent = 'Retry';
+            }
+        });
+
+        window.refreshPrice = async (invId) => {
+            const { db, collectionPrefix } = window.appState;
+            const inv = window.appState.investments.find(i => i.id === invId);
+            if(!inv) return;
+
+            showToast(`Fetching latest price for ${inv.ticker}...`);
+            
+            // Mocking API delay
+            await new Promise(r => setTimeout(r, 1000));
+            
+            // Mock price fluctuation (-5% to +5%)
+            const fluctuation = 1 + ((Math.random() * 0.1) - 0.05);
+            const newPrice = Number((inv.currentPrice * fluctuation).toFixed(2));
+            const newCurrentValue = Number((inv.units * newPrice).toFixed(2));
+
+            if (firebaseConfig.apiKey === "mock" || !collectionPrefix) {
+                // LOCAL MODE
+                inv.currentPrice = newPrice;
+                inv.currentValue = newCurrentValue;
+                inv.priceUpdatedAt = new Date().toISOString();
+                updateUI();
+                showToast(`${inv.ticker} updated to ${formatCurrency(newPrice, inv.currency)} (Local)`);
+                return;
+            }
+
+            try {
+                const ref = doc(db, `${collectionPrefix}/investments`, invId);
+                await updateDoc(ref, {
+                    currentPrice: newPrice,
+                    currentValue: newCurrentValue,
+                    priceUpdatedAt: serverTimestamp(),
+                    priceSource: 'yahoo-mock'
+                });
+                showToast(`${inv.ticker} updated to ${formatCurrency(newPrice, inv.currency)}`);
+            } catch (e) {
+                showToast("Failed to update price", "error");
+            }
+        }
+
+        function getAssetValueForCompounding(assetId = 'all') {
+            const assets = window.appState.assets || [];
+            if (assetId === 'all') {
+                return assets.reduce((sum, asset) => sum + toBase(Number(asset.currentValue) || 0, asset.currency), 0);
+            }
+            const asset = assets.find(a => a.id === assetId);
+            return asset ? toBase(Number(asset.currentValue) || 0, asset.currency) : 0;
+        }
+
+        window.syncCompoundingFromAssets = function() {
+            const select = document.getElementById('sim-asset-source');
+            const principalInput = document.getElementById('sim-principal');
+            const helper = document.getElementById('sim-asset-helper');
+            if (!select || !principalInput) return;
+
+            const assetId = select.value || 'all';
+            const principal = getAssetValueForCompounding(assetId);
+            principalInput.value = Math.round(principal);
+
+            if (helper) {
+                if (assetId === 'all') {
+                    helper.textContent = `${window.appState.assets.length} asset(s) connected · Total current asset value`;
+                } else {
+                    const asset = window.appState.assets.find(a => a.id === assetId);
+                    helper.textContent = asset
+                        ? `${asset.name} · ${formatCurrency(principal, 'JPY')} in base currency`
+                        : 'Selected asset is no longer available.';
+                }
+            }
+
+            if (document.getElementById('page-compounding') &&
+                !document.getElementById('page-compounding').classList.contains('hidden')) {
+                window.runSimulation();
+            }
+        };
+
+        function renderCompoundingAssetOptions() {
+            const select = document.getElementById('sim-asset-source');
+            if (!select) return;
+
+            const current = select.value || 'all';
+            const assets = window.appState.assets || [];
+
+            select.innerHTML = '<option value="all">All Assets</option>' +
+                assets.map(asset => {
+                    const value = toBase(Number(asset.currentValue) || 0, asset.currency);
+                    return `<option value="${asset.id}">${asset.name} · ${formatCurrency(value, 'JPY')}</option>`;
+                }).join('');
+
+            select.value = assets.some(a => a.id === current) || current === 'all' ? current : 'all';
+            window.syncCompoundingFromAssets();
+        }
+
+        window.runSimulation = () => {
+            const principal = parseFloat(document.getElementById('sim-principal').value) || 0;
+            const monthly = parseFloat(document.getElementById('sim-monthly').value) || 0;
+            const rate = (parseFloat(document.getElementById('sim-rate').value) || 0) / 100;
+            const years = parseInt(document.getElementById('sim-years').value) || 0;
+
+            const months = years * 12;
+            const monthlyRate = rate / 12;
+
+            let labels = [];
+            let principalData = [];
+            let interestData = [];
+            
+            let currentPrincipal = principal;
+            let currentBalance = principal;
+
+            // Compute month by month for accuracy and chart smoothing
+            for (let i = 0; i <= months; i++) {
+                if (i % 12 === 0 || i === months) { // Save yearly data points
+                    labels.push(`Year ${i/12}`);
+                    principalData.push(currentPrincipal);
+                    interestData.push(currentBalance - currentPrincipal);
+                }
+                
+                // End of month accumulation
+                if(i < months) {
+                    currentBalance = (currentBalance + monthly) * (1 + monthlyRate);
+                    currentPrincipal += monthly;
+                }
+            }
+
+            // Update UI totals
+            document.getElementById('sim-out-invested').textContent = formatCurrency(currentPrincipal, 'JPY');
+            document.getElementById('sim-out-total').textContent = formatCurrency(currentBalance, 'JPY');
+
+            // Draw Chart
+            const ctx = document.getElementById('compoundingChart');
+            if (charts.compounding) charts.compounding.destroy();
+            
+            charts.compounding = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Total Invested',
+                            data: principalData,
+                            borderColor: '#94a3b8',
+                            backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Total Value (with Growth)',
+                            data: principalData.map((p, idx) => p + interestData[idx]),
+                            borderColor: '#f43f5e',
+                            backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { tooltip: { mode: 'index', intersect: false } },
+                    scales: { y: { stacked: false, ticks: { callback: v => '¥' + (v/10000).toFixed(0) + 'k' } } }
+                }
+            });
+        }
+
+        window.navigate = function(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
+            // Show target
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            
+            // Update desktop nav
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const desktopNav = document.getElementById(`nav-${pageId}`);
+            if(desktopNav) desktopNav.classList.add('active');
+
+            // Update mobile nav
+            document.querySelectorAll('.mobile-nav-item').forEach(el => {
+                el.classList.remove('text-brand-500');
+                el.classList.add('text-slate-400');
+            });
+            const mobileNav = document.querySelector(`.mobile-nav-item[data-target="${pageId}"]`);
+            if(mobileNav) {
+                mobileNav.classList.add('text-brand-500');
+                mobileNav.classList.remove('text-slate-400');
+            }
+
+            // Special trigger for Dashboard charts resizing
+            if(pageId === 'dashboard') updateUI();
+            if(pageId === 'compounding') runSimulation();
+        }
+
+        window.openAddMenu = () => {
+            const menu = document.getElementById('mobile-add-menu');
+            const content = document.getElementById('mobile-add-menu-content');
+            menu.classList.remove('hidden');
+            menu.classList.add('flex');
+            setTimeout(() => content.classList.remove('translate-y-full'), 10);
+        }
+
+        window.closeAddMenu = () => {
+            const menu = document.getElementById('mobile-add-menu');
+            const content = document.getElementById('mobile-add-menu-content');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+            }, 300);
+        }
+
+        window.showToast = (msg, type = 'success') => {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            const icon = document.getElementById('toast-icon');
+            
+            if(type === 'error') {
+                toast.classList.replace('bg-slate-800', 'bg-red-600');
+                icon.className = 'fa-solid fa-circle-exclamation text-white';
+            } else {
+                toast.classList.replace('bg-red-600', 'bg-slate-800');
+                icon.className = 'fa-solid fa-check-circle text-green-400';
+            }
+            
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-[-150%]', 'opacity-0');
+            }, 3000);
+        }
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+            
+            // Initial Chart Render setup
+            Chart.defaults.font.family = 'Inter';
+            Chart.defaults.color = '#64748b';
+        });
+
+    
+        // -----------------------------
+        // Wealth Analytics Charts
+        // -----------------------------
+        const wealthCharts = {};
+
+        function destroyWealthChart(key) {
+            if (wealthCharts[key]) {
+                wealthCharts[key].destroy();
+                delete wealthCharts[key];
+            }
+        }
+
+        function safeNumber(v) {
+            const n = Number(v);
+            return Number.isFinite(n) ? n : 0;
+        }
+
+        function chartValue(obj, keys) {
+            for (const key of keys) {
+                if (obj && obj[key] !== undefined && obj[key] !== null && obj[key] !== '') {
+                    return safeNumber(obj[key]);
+                }
+            }
+            return 0;
+        }
+
+        function formatChartCurrency(value) {
+            return new Intl.NumberFormat('ja-JP', {
+                style: 'currency',
+                currency: (window.appState?.baseCurrency || 'JPY'),
+                maximumFractionDigits: 0
+            }).format(value || 0);
+        }
+
+        function monthKey(value) {
+            if (!value) return null;
+            let d;
+            if (value?.toDate) d = value.toDate();
+            else if (value?.seconds) d = new Date(value.seconds * 1000);
+            else d = new Date(value);
+            if (Number.isNaN(d.getTime())) return null;
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        }
+
+        function monthLabel(key) {
+            if (!key) return '';
+            const [y,m] = key.split('-');
+            return new Date(Number(y), Number(m)-1, 1).toLocaleDateString('en-US', {month:'short', year:'numeric'});
+        }
+
+        function getDateForItem(item) {
+            return item?.date || item?.createdAt || item?.updatedAt || item?.purchaseDate || item?.contributionDate;
+        }
+
+        function refreshWealthCharts() {
+            const state = window.appState || {};
+            const assets = Array.isArray(state.assets) ? state.assets.filter(x => !x.isDeleted) : [];
+            const investments = Array.isArray(state.investments) ? state.investments.filter(x => !x.isDeleted) : [];
+            const contributions = Array.isArray(state.contributions) ? state.contributions.filter(x => !x.isDeleted) : [];
+            const goals = Array.isArray(state.goals) ? state.goals.filter(x => !x.isDeleted) : [];
+
+            // 1. Asset allocation
+            const allocation = {};
+            assets.forEach(a => {
+                const name = a.name || a.assetName || a.type || 'Other Assets';
+                allocation[name] = (allocation[name] || 0) + chartValue(a, ['value','amount','currentValue','balance']);
+            });
+            investments.forEach(i => {
+                const name = i.name || i.symbol || i.assetName || i.type || 'Investments';
+                const units = chartValue(i, ['units','quantity','shares']);
+                const price = chartValue(i, ['currentPrice','price','marketPrice']);
+                const fallback = chartValue(i, ['currentValue','value','amount']);
+                allocation[name] = (allocation[name] || 0) + (units && price ? units * price : fallback);
+            });
+            destroyWealthChart('allocation');
+            const allocCanvas = document.getElementById('assetAllocationChart');
+            if (allocCanvas && Object.values(allocation).some(v => v > 0)) {
+                wealthCharts.allocation = new Chart(allocCanvas, {
+                    type: 'doughnut',
+                    data: { labels: Object.keys(allocation), datasets: [{ data: Object.values(allocation) }] },
+                    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' }, tooltip:{ callbacks:{ label:(ctx)=>`${ctx.label}: ${formatChartCurrency(ctx.raw)}` } } } }
+                });
+            }
+
+            // 2. Investment performance
+            const perfLabels = investments.map(i => i.name || i.symbol || i.assetName || 'Investment');
+            const costData = investments.map(i => {
+                const units = chartValue(i, ['units','quantity','shares']);
+                const buy = chartValue(i, ['averageBuyPrice','avgBuyPrice','buyPrice','purchasePrice']);
+                return units && buy ? units * buy : chartValue(i, ['investedAmount','cost','principal','amount']);
+            });
+            const marketData = investments.map(i => {
+                const units = chartValue(i, ['units','quantity','shares']);
+                const price = chartValue(i, ['currentPrice','price','marketPrice']);
+                return units && price ? units * price : chartValue(i, ['currentValue','marketValue','value']);
+            });
+            destroyWealthChart('performance');
+            const perfCanvas = document.getElementById('investmentPerformanceChart');
+            if (perfCanvas) {
+                wealthCharts.performance = new Chart(perfCanvas, {
+                    type:'bar',
+                    data:{ labels:perfLabels, datasets:[
+                        { label:'Cost Basis', data:costData },
+                        { label:'Current Value', data:marketData }
+                    ]},
+                    options:{ responsive:true, maintainAspectRatio:false, scales:{y:{ticks:{callback:(v)=>formatChartCurrency(v)}}}, plugins:{tooltip:{callbacks:{label:(ctx)=>`${ctx.dataset.label}: ${formatChartCurrency(ctx.raw)}`}}}}
+                });
+            }
+
+            // 3. P/L per investment
+            const plData = marketData.map((v,i) => v - (costData[i] || 0));
+            destroyWealthChart('pl');
+            const plCanvas = document.getElementById('profitLossChart');
+            if (plCanvas) {
+                wealthCharts.pl = new Chart(plCanvas, {
+                    type:'bar',
+                    data:{ labels:perfLabels, datasets:[{ label:'Profit / Loss', data:plData }]},
+                    options:{ responsive:true, maintainAspectRatio:false, scales:{y:{ticks:{callback:(v)=>formatChartCurrency(v)}}}, plugins:{tooltip:{callbacks:{label:(ctx)=>formatChartCurrency(ctx.raw)}}}}
+                });
+            }
+
+            // 4. Goals progress
+            const goalLabels = goals.map(g => g.name || g.title || 'Goal');
+            const goalPct = goals.map(g => {
+                const current = chartValue(g, ['currentAmount','current','saved','amount']);
+                const target = chartValue(g, ['targetAmount','target','goalAmount']);
+                return target > 0 ? Math.min(100, Math.max(0, current / target * 100)) : 0;
+            });
+            destroyWealthChart('goals');
+            const goalCanvas = document.getElementById('goalsProgressChart');
+            if (goalCanvas) {
+                wealthCharts.goals = new Chart(goalCanvas, {
+                    type:'bar',
+                    data:{ labels:goalLabels, datasets:[{label:'Progress %', data:goalPct}]},
+                    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{min:0,max:100,ticks:{callback:(v)=>`${v}%`}}}}
+                });
+            }
+
+            // 5. Compound-growth simulation
+            // Uses the portfolio's current total as the starting capital and lets
+            // the user adjust annual return + monthly contribution assumptions.
+            destroyWealthChart('contributions');
+
+            const compoundCanvas = document.getElementById('contributionChart');
+            const compoundReturnInput = document.getElementById('compoundReturnRate');
+            const compoundMonthlyInput = document.getElementById('compoundMonthlyContribution');
+            const compoundYearsInput = document.getElementById('compoundYears');
+
+            const getNum = (el, fallback) => {
+                const n = Number(el?.value);
+                return Number.isFinite(n) ? n : fallback;
+            };
+
+            const currentPortfolioValue = [
+                ...assets.map(a => chartValue(a, ['value','amount','balance','currentValue'])),
+                ...investments.map(i => {
+                    const units = Number(i.units ?? i.quantity ?? 0);
+                    const price = Number(i.currentPrice ?? i.price ?? i.averageBuyPrice ?? 0);
+                    return Number.isFinite(units * price) ? units * price : 0;
+                })
+            ].reduce((sum, n) => sum + (Number.isFinite(n) ? n : 0), 0);
+
+            const startingCapital = Math.max(0, currentPortfolioValue);
+            const annualReturn = getNum(compoundReturnInput, 8) / 100;
+            const monthlyContribution = Math.max(0, getNum(compoundMonthlyInput, 100000));
+            const years = Math.min(50, Math.max(1, Math.round(getNum(compoundYearsInput, 10))));
+
+            const monthlyRate = Math.pow(1 + annualReturn, 1 / 12) - 1;
+            const compoundRows = [];
+            let balance = startingCapital;
+            let contributed = startingCapital;
+
+            for (let month = 0; month <= years * 12; month++) {
+                if (month > 0) {
+                    balance = balance * (1 + monthlyRate) + monthlyContribution;
+                    contributed += monthlyContribution;
+                }
+
+                if (month % 12 === 0 || month === years * 12) {
+                    compoundRows.push({
+                        year: String(month / 12),
+                        total: Math.round(balance),
+                        principal: Math.round(contributed),
+                        growth: Math.round(balance - contributed)
+                    });
+                }
+            }
+
+            const compoundChart = document.getElementById('compoundGrowthChart') || compoundCanvas;
+            if (compoundChart) {
+                if (compoundChart.id === 'contributionChart') {
+                    compoundChart.id = 'compoundGrowthChart';
+                }
+
+                wealthCharts.contributions = new Chart(compoundChart, {
+                    type:'line',
+                    data:{
+                        labels:compoundRows.map(r => `Year ${r.year}`),
+                        datasets:[
+                            {
+                                label:'Projected wealth',
+                                data:compoundRows.map(r => r.total),
+                                tension:0.3,
+                                fill:true,
+                                pointRadius:3
+                            },
+                            {
+                                label:'Total principal',
+                                data:compoundRows.map(r => r.principal),
+                                tension:0.25,
+                                fill:false,
+                                pointRadius:2
+                            }
+                        ]
+                    },
+                    options:{
+                        responsive:true,
+                        maintainAspectRatio:false,
+                        interaction:{mode:'index', intersect:false},
+                        scales:{
+                            x:{grid:{display:false}},
+                            y:{
+                                beginAtZero:true,
+                                ticks:{callback:(v)=>formatChartCurrency(v)}
+                            }
+                        },
+                        plugins:{
+                            tooltip:{
+                                callbacks:{
+                                    label:(ctx)=>`${ctx.dataset.label}: ${formatChartCurrency(ctx.raw)}`
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 6. Net worth trend. Use cumulative contributions as a conservative data-driven
+            // trend when historical asset snapshots are not available.
+            let running = 0;
+            const netWorth = days.map(k => {
+                running += daily[k];
+                return running;
+            });
+            destroyWealthChart('netWorth');
+            const netCanvas = document.getElementById('netWorthTrendChart');
+            if (netCanvas) {
+                wealthCharts.netWorth = new Chart(netCanvas, {
+                    type:'line',
+                    data:{labels:days.map(day => new Date(day + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'})),datasets:[{label:'Cumulative Contributions',data:netWorth,tension:.25,fill:true}]},
+                    options:{responsive:true,maintainAspectRatio:false,scales:{y:{ticks:{callback:(v)=>formatChartCurrency(v)}}}}
+                });
+            }
+        }
+
+        // Refresh whenever Firebase-backed state changes.
+        const originalRefreshDashboard = window.refreshDashboard;
+        window.refreshWealthCharts = refreshWealthCharts;
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(refreshWealthCharts, 700);
+        });
+
+</script>
+</body>
+</html>
